@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import NextAuth, { AuthOptions } from "next-auth";
 import { db } from "@/libs/prismadb";
 import GithubProvider from "next-auth/providers/github";
@@ -23,11 +23,15 @@ export const authOptions: AuthOptions = {
           throw new Error("Invalid Credentials");
         }
 
+        console.log("cred", credentials);
+
         const user = await db.user.findUnique({
           where: {
             email: credentials.email,
           },
         });
+
+        console.log("user", user);
 
         if (!user || !user?.hashedPassword) {
           throw new Error("Invalid Credentials");
@@ -37,6 +41,8 @@ export const authOptions: AuthOptions = {
           credentials.password,
           user.hashedPassword,
         );
+
+        console.log("user", isCorrectPassword);
 
         if (!isCorrectPassword) {
           throw new Error("Invalid Credentials");
