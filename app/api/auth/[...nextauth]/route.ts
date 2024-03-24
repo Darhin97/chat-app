@@ -23,7 +23,7 @@ export const authOptions: AuthOptions = {
           throw new Error("Invalid Credentials");
         }
 
-        console.log("cred", credentials);
+        // console.log("cred", credentials);
 
         const user = await db.user.findUnique({
           where: {
@@ -31,7 +31,7 @@ export const authOptions: AuthOptions = {
           },
         });
 
-        console.log("user", user);
+        // console.log("user", user);
 
         if (!user || !user?.hashedPassword) {
           throw new Error("Invalid Credentials");
@@ -42,7 +42,7 @@ export const authOptions: AuthOptions = {
           user.hashedPassword,
         );
 
-        console.log("user", isCorrectPassword);
+        // console.log("user", isCorrectPassword);
 
         if (!isCorrectPassword) {
           throw new Error("Invalid Credentials");
