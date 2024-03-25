@@ -1,7 +1,6 @@
 import getCurrentUser from "@/actions/get-current-user";
 import { NextResponse } from "next/server";
 import { db } from "@/libs/prismadb";
-import { equal } from "node:assert";
 
 export async function POST(req: Request) {
   try {

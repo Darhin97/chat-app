@@ -1,7 +1,7 @@
 import getCurrentUser from "@/actions/get-current-user";
 import { db } from "@/libs/prismadb";
 
-const getCoversationById = async (conversationId: string) => {
+const getConversationById = async (conversationId: string) => {
   try {
     const currentUser = await getCurrentUser();
 
@@ -23,4 +23,4 @@ const getCoversationById = async (conversationId: string) => {
   }
 };
 
-export default getCoversationById;
+export default getConversationById;
