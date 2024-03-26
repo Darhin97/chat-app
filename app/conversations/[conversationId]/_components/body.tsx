@@ -17,7 +17,7 @@ const Body = ({ initialMessages }: BodyProps) => {
 
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`);
-  }, []);
+  }, [conversationId]);
 
   return (
     <div className={"flex-1 overflow-y-auto"}>

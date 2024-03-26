@@ -12,6 +12,7 @@ interface MessageBoxProps {
   isLast?: boolean;
 }
 const MessageBox = ({ data, isLast }: MessageBoxProps) => {
+  // console.log({ data });
   const session = useSession();
   const isOwn = session?.data?.user?.email === data?.sender?.email;
   const seenList = (data.seen || [])
@@ -60,6 +61,11 @@ const MessageBox = ({ data, isLast }: MessageBoxProps) => {
             <div>{data.body}</div>
           )}
         </div>
+        {isLast && isOwn && seenList.length > 0 && (
+          <div
+            className={"text-sm font-light text-gray-500"}
+          >{`Seen by ${seenList}`}</div>
+        )}
       </div>
     </div>
   );
