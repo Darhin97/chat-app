@@ -40,7 +40,7 @@ const ProfileDrawer = ({ isOpen, onClose, data }: ProfileDrawerProps) => {
     }
 
     return isActive ? "Active" : "Offline";
-  }, [data]);
+  }, [data, isActive]);
 
   return (
     <>
