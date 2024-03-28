@@ -6,14 +6,16 @@ import clsx from "clsx";
 import Avatar from "@/app/components/avatar";
 import { format } from "date-fns";
 import Image from "next/image";
+import ImageModal from "@/app/conversations/[conversationId]/_components/image-modal";
+import { useState } from "react";
 
 interface MessageBoxProps {
   data: FullMessageType;
   isLast?: boolean;
 }
 const MessageBox = ({ data, isLast }: MessageBoxProps) => {
-  // console.log({ data });
   const session = useSession();
+  const [imageModalOpen, setImageModalOpen] = useState(false);
   const isOwn = session?.data?.user?.email === data?.sender?.email;
   const seenList = (data.seen || [])
     .filter((user) => user.email !== data?.sender?.email)
@@ -42,12 +44,17 @@ const MessageBox = ({ data, isLast }: MessageBoxProps) => {
           </div>
         </div>
         <div className={message}>
+          <ImageModal
+            src={data.image}
+            isOpen={imageModalOpen}
+            onClose={() => setImageModalOpen(false)}
+          />
           {data.image ? (
             <Image
               alt="Image"
               height="288"
               width="288"
-              // onClick={() => setImageModalOpen(true)}
+              onClick={() => setImageModalOpen(true)}
               src={data.image}
               className="
                 object-cover

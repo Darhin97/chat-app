@@ -1,6 +1,7 @@
 import getCurrentUser from "@/actions/get-current-user";
 import { NextResponse } from "next/server";
 import { db } from "@/libs/prismadb";
+import { pusherServer } from "@/libs/pusher";
 
 export async function POST(req: Request) {
   try {
@@ -20,7 +21,7 @@ export async function POST(req: Request) {
 
     //groupchat
     if (isGroup) {
-      const newCoversation = await db.conversation.create({
+      const newConversation = await db.conversation.create({
         data: {
           name,
           isGroup,
@@ -40,7 +41,13 @@ export async function POST(req: Request) {
         },
       });
 
-      return NextResponse.json(newCoversation);
+      newConversation.users.forEach((user) => {
+        if (user.email) {
+          pusherServer.trigger(user.email, "conversation:new", newConversation);
+        }
+      });
+
+      return NextResponse.json(newConversation);
     }
 
     //check for existing convo
@@ -84,6 +91,12 @@ export async function POST(req: Request) {
       include: {
         users: true,
       },
+    });
+
+    newConversation.users.map((user) => {
+      if (user.email) {
+        pusherServer.trigger(user.email, "conversation:new", newConversation);
+      }
     });
 
     return NextResponse.json(newConversation);

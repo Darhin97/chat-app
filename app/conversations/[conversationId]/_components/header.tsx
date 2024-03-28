@@ -7,6 +7,8 @@ import Link from "next/link";
 import { HiChevronLeft, HiEllipsisHorizontal } from "react-icons/hi2";
 import Avatar from "@/app/components/avatar";
 import ProfileDrawer from "@/app/conversations/[conversationId]/_components/profile-drawer";
+import AvatarGroup from "@/app/components/avatar-group";
+import useActiveList from "@/hooks/use-active-list";
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -16,14 +18,16 @@ interface HeaderProps {
 const Header = ({ conversation }: HeaderProps) => {
   const otherUser = useOtherUser(conversation);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { members } = useActiveList();
+  const isActive = members.indexOf(otherUser?.email!) !== -1;
 
   const statusText = useMemo(() => {
     if (conversation.isGroup) {
       return `${conversation.users.length} members`;
     }
 
-    return "Active";
-  }, [conversation]);
+    return isActive ? "Active" : "Offline";
+  }, [conversation, isActive]);
 
   return (
     <>
@@ -46,7 +50,12 @@ const Header = ({ conversation }: HeaderProps) => {
           >
             <HiChevronLeft size={32} />
           </Link>
-          <Avatar user={otherUser} />
+          {conversation.isGroup ? (
+            <AvatarGroup users={conversation.users} />
+          ) : (
+            <Avatar user={otherUser} />
+          )}
+
           <div className={"flex flex-col"}>
             <div>{conversation.name || otherUser.name}</div>
             <div className={"text-sm font-light text-neutral-500"}>

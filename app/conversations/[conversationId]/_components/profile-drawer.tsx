@@ -7,8 +7,9 @@ import { Fragment, useMemo, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { IoClose, IoTrash } from "react-icons/io5";
 import Avatar from "@/app/components/avatar";
-import Modal from "@/app/components/modal";
 import ConfirmModal from "@/app/conversations/[conversationId]/_components/confirm-modal";
+import AvatarGroup from "@/app/components/avatar-group";
+import useActiveList from "@/hooks/use-active-list";
 
 interface ProfileDrawerProps {
   isOpen: boolean;
@@ -30,16 +31,15 @@ const ProfileDrawer = ({ isOpen, onClose, data }: ProfileDrawerProps) => {
     return data.name || otherUser.name;
   }, [data.name, otherUser.name]);
 
-  // const { members } = useActiveList();
-  // const isActive = members.indexOf(otherUser?.email!) !== -1;
+  const { members } = useActiveList();
+  const isActive = members.indexOf(otherUser?.email!) !== -1;
 
   const statusText = useMemo(() => {
     if (data.isGroup) {
       return `${data.users.length} members`;
     }
 
-    // return isActive ? "Active" : "Offline";
-    return "Active";
+    return isActive ? "Active" : "Offline";
   }, [data]);
 
   return (
@@ -93,7 +93,11 @@ const ProfileDrawer = ({ isOpen, onClose, data }: ProfileDrawerProps) => {
                       <div className="relative mt-6 flex-1 px-4 sm:px-6">
                         <div className="flex flex-col items-center">
                           <div className={"mb-2"}>
-                            <Avatar user={otherUser} />
+                            {data.isGroup ? (
+                              <AvatarGroup users={data.users} />
+                            ) : (
+                              <Avatar user={otherUser} />
+                            )}
                           </div>
 
                           <div className={"capitalize"}>{title}</div>
@@ -117,25 +121,10 @@ const ProfileDrawer = ({ isOpen, onClose, data }: ProfileDrawerProps) => {
                             <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
                               {data.isGroup && (
                                 <div>
-                                  <dt
-                                    className="
-                                  text-sm
-                                  font-medium
-                                  text-gray-500
-                                  sm:w-40
-                                  sm:flex-shrink-0
-                                "
-                                  >
+                                  <dt className=" text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
                                     Emails
                                   </dt>
-                                  <dd
-                                    className="
-                                  mt-1
-                                  text-sm
-                                  text-gray-900
-                                  sm:col-span-2
-                                "
-                                  >
+                                  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
                                     {data.users
                                       .map((user) => user.email)
                                       .join(", ")}
@@ -144,25 +133,10 @@ const ProfileDrawer = ({ isOpen, onClose, data }: ProfileDrawerProps) => {
                               )}
                               {!data.isGroup && (
                                 <div>
-                                  <dt
-                                    className="
-                                  text-sm
-                                  font-medium
-                                  text-gray-500
-                                  sm:w-40
-                                  sm:flex-shrink-0
-                                "
-                                  >
+                                  <dt className=" text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
                                     Email
                                   </dt>
-                                  <dd
-                                    className="
-                                  mt-1
-                                  text-sm
-                                  text-gray-900
-                                  sm:col-span-2
-                                "
-                                  >
+                                  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
                                     {otherUser.email}
                                   </dd>
                                 </div>
@@ -171,25 +145,10 @@ const ProfileDrawer = ({ isOpen, onClose, data }: ProfileDrawerProps) => {
                                 <>
                                   <hr />
                                   <div>
-                                    <dt
-                                      className="
-                                    text-sm
-                                    font-medium
-                                    text-gray-500
-                                    sm:w-40
-                                    sm:flex-shrink-0
-                                  "
-                                    >
+                                    <dt className=" text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
                                       Joined
                                     </dt>
-                                    <dd
-                                      className="
-                                    mt-1
-                                    text-sm
-                                    text-gray-900
-                                    sm:col-span-2
-                                  "
-                                    >
+                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
                                       <time dateTime={joinedDate}>
                                         {joinedDate}
                                       </time>

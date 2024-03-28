@@ -8,6 +8,7 @@ import { useCallback, useMemo } from "react";
 import Avatar from "@/app/components/avatar";
 import clsx from "clsx";
 import { format } from "date-fns";
+import AvatarGroup from "@/app/components/avatar-group";
 
 interface ConversationBoxProps {
   data: FullConversationType;
@@ -82,8 +83,7 @@ const ConversationBox = ({ data, selected }: ConversationBoxProps) => {
       )}
     >
       {data.isGroup ? (
-        // <AvatarGroup users={data.users} />
-        <p>hello</p>
+        <AvatarGroup users={data.users} />
       ) : (
         <Avatar user={otherUser} />
       )}
@@ -95,13 +95,7 @@ const ConversationBox = ({ data, selected }: ConversationBoxProps) => {
               {data.name || otherUser.name}
             </p>
             {lastMessage?.createdAt && (
-              <p
-                className="
-                  text-xs
-                  text-gray-400
-                  font-light
-                "
-              >
+              <p className=" text-sm text-gray-400 font-light">
                 {format(new Date(lastMessage.createdAt), "p")}
               </p>
             )}

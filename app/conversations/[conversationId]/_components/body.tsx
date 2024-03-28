@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { FullMessageType } from "@/types/type";
 import useConversation from "@/hooks/use-conversation";
 import MessageBox from "@/app/conversations/[conversationId]/_components/message-box";
+import { pusherClient } from "@/libs/pusher";
+import { find } from "lodash";
 
 interface BodyProps {
   initialMessages: FullMessageType[];
@@ -17,6 +19,46 @@ const Body = ({ initialMessages }: BodyProps) => {
 
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`);
+  }, [conversationId]);
+
+  useEffect(() => {
+    pusherClient.subscribe(conversationId);
+    bottomRef?.current?.scrollIntoView();
+
+    const messageHandler = (message: FullMessageType) => {
+      axios.post(`/api/conversations/${conversationId}/seen`);
+      setMessages((current) => {
+        if (find(current, { id: message.id })) {
+          return current;
+        }
+
+        return [...current, message];
+      });
+
+      bottomRef?.current?.scrollIntoView();
+    };
+
+    //updates seen array in real-time
+    const updateMessageHanlder = (newMessage: FullMessageType) => {
+      setMessages((current) =>
+        current.map((currentMessage) => {
+          if (currentMessage.id === newMessage.id) {
+            return newMessage;
+          }
+          return currentMessage;
+        }),
+      );
+    };
+
+    pusherClient.bind("messages:new", messageHandler);
+    pusherClient.bind("message:update", updateMessageHanlder);
+
+    //unsubscribe to channel and unbind when component unmounts
+    return () => {
+      pusherClient.unsubscribe(conversationId);
+      pusherClient.unbind("messages:new", messageHandler);
+      pusherClient.unbind("messages:update", updateMessageHanlder);
+    };
   }, [conversationId]);
 
   return (

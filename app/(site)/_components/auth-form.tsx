@@ -57,16 +57,16 @@ const AuthForm = () => {
             redirect: false,
           }),
         )
-        // .then((callback) => {
-        //   if (callback?.error) {
-        //     toast.error("Invalid credentials!");
-        //   }
-        //
-        //   if (callback?.ok && !callback?.error) {
-        //     toast.success("Success!");
-        //     // router.push("/conversations");
-        //   }
-        // })
+        .then((callback) => {
+          if (callback?.error) {
+            toast.error("Invalid credentials!");
+          }
+
+          if (callback?.ok && !callback?.error) {
+            toast.success("Success!");
+            // router.push("/conversations");
+          }
+        })
         .catch(() => toast.error("Something went wrong!"))
         .finally(() => setIsLoading(false));
     }
@@ -154,10 +154,10 @@ const AuthForm = () => {
               icon={BsGithub}
               onClick={() => socialAction("github")}
             />
-            <AuthSocialButton
-              icon={BsGoogle}
-              onClick={() => socialAction("google")}
-            />
+            {/*<AuthSocialButton*/}
+            {/*  icon={BsGoogle}*/}
+            {/*  onClick={() => socialAction("google")}*/}
+            {/*/>*/}
           </div>
         </div>
         <div

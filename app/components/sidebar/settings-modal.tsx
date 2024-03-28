@@ -41,7 +41,7 @@ const SettingsModal = ({
 
   const image = watch("image");
 
-  console.log(image);
+  // console.log(image);
 
   const handleUpload = (result: any) => {
     setValue("image", result?.info?.secure_url, { shouldValidate: true });
