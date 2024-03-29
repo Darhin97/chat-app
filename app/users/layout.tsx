@@ -9,6 +9,8 @@ export default async function UsersLayout({
 }) {
   const users = await getUsers();
 
+  // console.log("User page", { users });
+
   return (
     <Sidebar>
       <div className="h-full">

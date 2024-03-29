@@ -3,6 +3,7 @@ import { db } from "@/libs/prismadb";
 
 const getUsers = async () => {
   const session = await getSession();
+  // console.log("getUser", { session });
   if (!session?.user?.email) {
     return [];
   }
